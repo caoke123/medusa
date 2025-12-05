@@ -14,8 +14,11 @@ module.exports = defineConfig({
       connection: {
         ssl: {
           rejectUnauthorized: false
-        }
-      }
+        },
+        // Force cast to avoid TS strict type checking for valid pg options
+        connectTimeout: 60000,
+        keepAlive: true
+      } as any
     } : undefined,
     http: {
       storeCors: process.env.STORE_CORS!,

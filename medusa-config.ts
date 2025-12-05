@@ -14,10 +14,7 @@ module.exports = defineConfig({
       connection: {
         ssl: {
           rejectUnauthorized: false
-        },
-        // 增加连接超时时间，防止因网络波动导致的连接失败
-        connectTimeout: 60000, 
-        keepAlive: true
+        }
       }
     } : undefined,
     http: {

@@ -33,7 +33,7 @@
 
 ### 必需的环境变量
 ```
-DATABASE_URL=postgresql://postgres.cyzhakgzydnfijyfizlt:jayxp5219@aws-1-ap-south-1.pooler.supabase.com:6543/postgres
+DATABASE_URL=postgresql://postgres.cyzhakgzydnfijyfizlt:jayxp5219@aws-1-ap-south-1.pooler.supabase.com:5432/postgres
 REDIS_URL=rediss://default:AZsRAAIncDJhNzQ5YjQ5NTc1ODA0MDU1YjYyYjdlM2EwMmJhYzE1YXAyMzk2OTc@smashing-ostrich-39697.upstash.io:6379
 STORE_CORS=https://your-domain.com,https://admin.your-domain.com
 ADMIN_CORS=https://admin.your-domain.com

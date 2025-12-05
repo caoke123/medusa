@@ -3,7 +3,8 @@ builder = "NIXPACKS"
 buildCommand = "yarn install && yarn build"
 
 [deploy]
-startCommand = "yarn start"
+# 启动前自动运行数据库迁移，确保数据库结构最新
+startCommand = "yarn medusa db:migrate && yarn start"
 healthcheckPath = "/health"
 healthcheckTimeout = 300
 restartPolicyType = "on_failure"

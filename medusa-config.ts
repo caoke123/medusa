@@ -2,15 +2,21 @@ import { loadEnv, defineConfig } from '@medusajs/framework/utils'
 
 loadEnv(process.env.NODE_ENV || 'development', process.cwd())
 
+const isProduction = process.env.NODE_ENV === 'production';
+const dbUrl = process.env.DATABASE_URL || '';
+// Check if the database is remote (not localhost) to enable SSL
+const isRemoteDb = dbUrl.includes('supabase') || dbUrl.includes('railway') || !dbUrl.includes('localhost');
+
 module.exports = defineConfig({
   projectConfig: {
     databaseUrl: process.env.DATABASE_URL,
-    // 在生产环境中修改 DATABASE_URL 以包含 SSL 配置，解决 Supabase 连接超时问题
-    ...(process.env.NODE_ENV === 'production' && process.env.DATABASE_URL && {
-      databaseUrl: process.env.DATABASE_URL.includes('?')
-        ? `${process.env.DATABASE_URL}&sslmode=require&sslrejectunauthorized=false`
-        : `${process.env.DATABASE_URL}?sslmode=require&sslrejectunauthorized=false`
-    }),
+    databaseDriverOptions: isRemoteDb ? {
+      connection: {
+        ssl: {
+          rejectUnauthorized: false
+        }
+      }
+    } : undefined,
     http: {
       storeCors: process.env.STORE_CORS!,
       adminCors: process.env.ADMIN_CORS!,
@@ -19,14 +25,26 @@ module.exports = defineConfig({
       cookieSecret: process.env.COOKIE_SECRET || "supersecret",
     }
   },
-  // Redis模块配置暂时注释，因为@medusajs/redis包在当前版本中不可用
-  // modules: [
-  //   {
-  //     resolve: "@medusajs/redis",
-  //     options: {
-  //       // 使用 REDIS_URL 环境变量，已包含完整的连接信息和认证
-  //       redisUrl: process.env.REDIS_URL,
-  //     },
-  //   },
-  // ],
+  modules: [
+    {
+      resolve: "@medusajs/medusa/cache-redis",
+      options: {
+        redisUrl: process.env.REDIS_URL,
+      },
+    },
+    {
+      resolve: "@medusajs/medusa/event-bus-redis",
+      options: {
+        redisUrl: process.env.REDIS_URL,
+      },
+    },
+    {
+      resolve: "@medusajs/medusa/workflow-engine-redis",
+      options: {
+        redis: {
+          url: process.env.REDIS_URL,
+        },
+      },
+    },
+  ],
 })

@@ -16,8 +16,15 @@ module.exports = defineConfig({
           rejectUnauthorized: false
         },
         // Force cast to avoid TS strict type checking for valid pg options
-        connectTimeout: 60000,
-        keepAlive: true
+        connectTimeout: 120000, // 120s timeout for cross-region connection
+        keepAlive: true,
+        idleTimeoutMillis: 30000, // Close idle connections after 30s
+        pool: {
+          min: 0,
+          max: 10, // Limit max connections to avoid exhausting pooler
+          acquireTimeoutMillis: 120000,
+          idleTimeoutMillis: 30000
+        }
       } as any
     } : undefined,
     http: {

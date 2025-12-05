@@ -5,7 +5,7 @@ buildCommand = "yarn install && yarn build"
 [deploy]
 # 暂时移除启动时的自动迁移，直接启动服务
 startCommand = "yarn start"
-healthcheckPath = "/health"
+healthcheckPath = "/"
 healthcheckTimeout = 300
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 10

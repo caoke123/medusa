@@ -5,6 +5,12 @@ loadEnv(process.env.NODE_ENV || 'development', process.cwd())
 module.exports = defineConfig({
   projectConfig: {
     databaseUrl: process.env.DATABASE_URL,
+    // 在生产环境中修改 DATABASE_URL 以包含 SSL 配置，解决 Supabase 连接超时问题
+    ...(process.env.NODE_ENV === 'production' && process.env.DATABASE_URL && {
+      databaseUrl: process.env.DATABASE_URL.includes('?')
+        ? `${process.env.DATABASE_URL}&sslmode=require&sslrejectunauthorized=false`
+        : `${process.env.DATABASE_URL}?sslmode=require&sslrejectunauthorized=false`
+    }),
     http: {
       storeCors: process.env.STORE_CORS!,
       adminCors: process.env.ADMIN_CORS!,
@@ -18,11 +24,8 @@ module.exports = defineConfig({
   //   {
   //     resolve: "@medusajs/redis",
   //     options: {
-  //       redisUrl: process.env.UPSTASH_REDIS_REST_URL || process.env.REDIS_URL,
-  //       redisOptions: {
-  //         password: process.env.UPSTASH_REDIS_REST_TOKEN,
-  //         tls: process.env.UPSTASH_REDIS_REST_URL?.startsWith("rediss://") ? {} : undefined,
-  //       },
+  //       // 使用 REDIS_URL 环境变量，已包含完整的连接信息和认证
+  //       redisUrl: process.env.REDIS_URL,
   //     },
   //   },
   // ],

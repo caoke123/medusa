@@ -3,8 +3,8 @@ builder = "NIXPACKS"
 buildCommand = "yarn install && yarn build"
 
 [deploy]
-# 暂时移除启动时的自动迁移，直接启动服务
-startCommand = "yarn start"
+# 恢复启动时的自动迁移
+startCommand = "yarn medusa db:migrate && yarn start"
 healthcheckPath = "/"
 healthcheckTimeout = 300
 restartPolicyType = "on_failure"

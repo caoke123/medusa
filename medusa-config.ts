@@ -19,13 +19,13 @@ module.exports = defineConfig({
         connectTimeout: 120000, // 120s timeout for cross-region connection
         keepAlive: true,
         idleTimeoutMillis: 30000, // Close idle connections after 30s
-        pool: {
-          min: 0,
-          max: 10, // Limit max connections to avoid exhausting pooler
-          acquireTimeoutMillis: 120000,
-          idleTimeoutMillis: 30000
-        }
-      } as any
+      } as any,
+      pool: {
+        min: 0,
+        max: 10, // Limit max connections to avoid exhausting pooler
+        acquireTimeoutMillis: 120000,
+        idleTimeoutMillis: 30000
+      }
     } : undefined,
     http: {
       storeCors: process.env.STORE_CORS!,
